@@ -1,0 +1,95 @@
+CREATE TABLE `assoc` (
+  `idAssoc` int(11) NOT NULL AUTO_INCREMENT,
+  `wrongC` int(11) NOT NULL DEFAULT '0',
+  `corrC` int(11) NOT NULL DEFAULT '0',
+  `tier` int(11) NOT NULL DEFAULT '5',
+  `idCard` int(11) NOT NULL,
+  `idUser` int(11) NOT NULL,
+  PRIMARY KEY (`idAssoc`),
+  KEY `fk_assoc_idCard_card_idCard` (`idCard`),
+  KEY `fk_assoc_idUser_user_idUser` (`idUser`),
+  CONSTRAINT `fk_assoc_idCard_card_idCard` FOREIGN KEY (`idCard`) REFERENCES `card` (`idCard`),
+  CONSTRAINT `fk_assoc_idUser_user_idUser` FOREIGN KEY (`idUser`) REFERENCES `user` (`idUser`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='assoc-1470654981'
+
+CREATE TABLE `authtoken` (
+  `idAuthtoken` int(11) NOT NULL AUTO_INCREMENT,
+  `selector` varchar(12) NOT NULL,
+  `token` varchar(64) NOT NULL,
+  `expires` datetime NOT NULL,
+  `idUser` int(11) NOT NULL,
+  PRIMARY KEY (`idAuthtoken`),
+  KEY `fk_authtoken_idUser_user_idUser` (`idUser`),
+  CONSTRAINT `fk_authtoken_idUser_user_idUser` FOREIGN KEY (`idUser`) REFERENCES `user` (`idUser`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='authtoken-1470905959'
+
+CREATE TABLE `box` (
+  `idBox` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `desc` text NOT NULL,
+  `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `idUser` int(11) NOT NULL,
+  PRIMARY KEY (`idBox`),
+  KEY `fk_box_idUser_user_idUser` (`idUser`),
+  CONSTRAINT `fk_box_idUser_user_idUser` FOREIGN KEY (`idUser`) REFERENCES `user` (`idUser`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='box-1470654982'
+
+CREATE TABLE `card` (
+  `idCard` int(11) NOT NULL AUTO_INCREMENT,
+  `qSide` text NOT NULL,
+  `aSide` text NOT NULL,
+  `idBox` int(11) NOT NULL,
+  PRIMARY KEY (`idCard`),
+  KEY `fk_card_idBox_box_idBox` (`idBox`),
+  CONSTRAINT `fk_card_idBox_box_idBox` FOREIGN KEY (`idBox`) REFERENCES `box` (`idBox`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='card-1470654979'
+
+CREATE TABLE `permission` (
+  `idPermission` int(11) NOT NULL AUTO_INCREMENT,
+  `permission` varchar(40) NOT NULL,
+  PRIMARY KEY (`idPermission`),
+  UNIQUE KEY `permission` (`permission`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='permission-1449494964'
+
+CREATE TABLE `permission2user` (
+  `idPermission` int(11) NOT NULL,
+  `idUser` int(11) NOT NULL,
+  PRIMARY KEY (`idPermission`,`idUser`),
+  KEY `fk_permission2user_idUser_user_idUser` (`idUser`),
+  CONSTRAINT `fk_permission2user_idPermission_permission_idPermission` FOREIGN KEY (`idPermission`) REFERENCES `permission` (`idPermission`),
+  CONSTRAINT `fk_permission2user_idUser_user_idUser` FOREIGN KEY (`idUser`) REFERENCES `user` (`idUser`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='permission2user-1449494965'
+
+CREATE TABLE `permission2userGroup` (
+  `idPermission` int(11) NOT NULL,
+  `idUserGroup` int(11) NOT NULL,
+  PRIMARY KEY (`idPermission`,`idUserGroup`),
+  KEY `fk_permission2userGroup_idUserGroup_userGroup_idUserGroup` (`idUserGroup`),
+  CONSTRAINT `fk_permission2userGroup_idPermission_permission_idPermission` FOREIGN KEY (`idPermission`) REFERENCES `permission` (`idPermission`),
+  CONSTRAINT `fk_permission2userGroup_idUserGroup_userGroup_idUserGroup` FOREIGN KEY (`idUserGroup`) REFERENCES `userGroup` (`idUserGroup`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='permission2userGroup-1449494967'
+
+CREATE TABLE `user` (
+  `idUser` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(40) NOT NULL,
+  `email` varchar(40) NOT NULL,
+  `authHash` varchar(255) NOT NULL,
+  PRIMARY KEY (`idUser`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='user-1449494962'
+
+CREATE TABLE `user2userGroup` (
+  `idUser` int(11) NOT NULL,
+  `idUserGroup` int(11) NOT NULL,
+  PRIMARY KEY (`idUser`,`idUserGroup`),
+  KEY `fk_user2userGroup_idUserGroup_userGroup_idUserGroup` (`idUserGroup`),
+  CONSTRAINT `fk_user2userGroup_idUserGroup_userGroup_idUserGroup` FOREIGN KEY (`idUserGroup`) REFERENCES `userGroup` (`idUserGroup`),
+  CONSTRAINT `fk_user2userGroup_idUser_user_idUser` FOREIGN KEY (`idUser`) REFERENCES `user` (`idUser`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='user2userGroup-1449494966'
+
+CREATE TABLE `userGroup` (
+  `idUserGroup` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(40) NOT NULL,
+  PRIMARY KEY (`idUserGroup`),
+  UNIQUE KEY `name` (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='userGroup-1449494963'

@@ -1,0 +1,6 @@
+log/*
+vendor/*
+build/*
+config/config.php
+config/db.php
+auth.json
