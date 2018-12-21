@@ -1,0 +1,8 @@
+{
+    "name": "his5/flashcards",
+    "autoload": {
+        "psr-4": {
+            "HIS5\\flashcards\\": ""
+        }
+    }
+}
