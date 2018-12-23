@@ -1,0 +1,39 @@
+CREATE TABLE "user" (
+  -- user_1449494962
+  "idUser" integer NOT NULL PRIMARY KEY,
+  "name" varchar(40) NOT NULL,
+  "sphinx_id" integer NOT NULL
+)
+
+CREATE TABLE "box" (
+  -- box_1449494963
+  "idBox" integer NOT NULL PRIMARY KEY,
+  "name" varchar(255) NOT NULL,
+  "desc" text NOT NULL,
+  "createtime" timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  "updatetime" timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  "idUser" integer NOT NULL,
+  FOREIGN KEY ("idUser") REFERENCES "user"("idUser")
+)
+
+CREATE TABLE "card" (
+  -- card_1449494964
+  "idCard" integer NOT NULL PRIMARY KEY,
+  "qSide" text NOT NULL,
+  "aSide" text NOT NULL,
+  "idBox" integer NOT NULL,
+  FOREIGN KEY ("idBox") REFERENCES "box"("idBox")
+)
+
+CREATE TABLE "assoc" (
+  -- assoc_1449494965
+  "idAssoc" integer NOT NULL PRIMARY KEY,
+  "wrongC" integer NOT NULL DEFAULT 0,
+  "corrC" integer NOT NULL DEFAULT 0,
+  "tier" integer NOT NULL DEFAULT 5,
+  "idCard" integer NOT NULL,
+  "idUser" integer NOT NULL,
+  FOREIGN KEY ("idCard") REFERENCES "card"("idCard"),
+  FOREIGN KEY ("idUser") REFERENCES "user"("idUser"),
+  CONSTRAINT "unq_assoc_idCard" UNIQUE ("idCard")
+)

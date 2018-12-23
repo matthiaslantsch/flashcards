@@ -22,5 +22,5 @@
  	/**
  	 * The file of the sqlite database
  	 */
- 	"file" => "%app.vardir%{app}.db"
+ 	"file" => "%app.vardir%flashcards.db"
  );

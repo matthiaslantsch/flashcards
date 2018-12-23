@@ -1,0 +1,52 @@
+/* Default project css file */
+.input-group {
+	min-width:100%;
+}
+
+li {
+    list-style-type: none;
+}
+
+textarea {
+	resize: vertical;
+	min-width: 100%;
+}
+
+td, th, .alertArea, .card-inner, .progressLabel {
+	text-align: center;
+}
+
+a.btn {
+	color: #337ab7;
+}
+
+.boxRow {
+	cursor: pointer;
+}
+
+.card-outer {
+	display: table;
+	height: 400px;
+	width: 100%
+}
+
+.card-inner {
+	display: table-cell;
+	vertical-align: middle;
+}
+
+.cardArea {
+	width: 60%;
+	margin-left: auto;
+	margin-right: auto
+}
+
+#myCarousel {
+	margin-bottom: 20px;
+}
+
+.flashcards-container {
+	width: 70%;
+	margin-left: auto;
+	margin-right: auto;
+}

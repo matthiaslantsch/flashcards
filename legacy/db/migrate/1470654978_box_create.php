@@ -6,14 +6,14 @@
  * database schema migration class file
  */
 
-namespace HIS5\flashcards\db\migrate;
+namespace holonet\flashcards\db\migrate;
 
 use HIS5\lib\activerecord as activerecord;
 use HIS5\lib\activerecord\Schema as Schema;
 
 /**
  * create the box table
- * 
+ *
  * @author  Matthias Lantsch
  * @version {VERSION}
  * @package HIS5\flashcards\db\migrate

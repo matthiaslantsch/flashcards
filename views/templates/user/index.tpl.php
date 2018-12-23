@@ -1,3 +1,4 @@
+</div>
 <div class="jumbotron">
 	<div class="container">
 		<h1>Welcome to flashcards!</h1>
@@ -54,7 +55,7 @@
 							Browse through hundreds of boxes created by the community covering wide ranges of subjects.
 							Widen your interests by checking out the study sets of other people.
 						</p>
-						<a href="<?=linkTo("box")?>">
+						<a href="<?=linkTo("boxes")?>">
 							<span class="pull-left">List All</span>
 							<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
 							<div class="clearfix"></div>
@@ -79,8 +80,8 @@
 						<h2>Edit your Profile</h2>
 						<p>
 							Check out how other people see you.
-							Change your username or password for future logins.
 							Edit your settings in order to customize your flashcards experience.
+							Reset your progress if you want to start over.
 						</p>
 						<a href="<?=linkTo("profile")?>">
 							<span class="pull-left">User Profile</span>
