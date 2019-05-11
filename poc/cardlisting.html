@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="author" content="Matthias Lantsch">
+    <title>Flashcards</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.2.0/css/bootstrap.min.css" crossorigin="anonymous">
+	<link type="text/css" rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+  </head>
+  <style>
+  html {
+	height: 100%;
+  }
+body {
+	min-height: 100%;
+	background-color: #33353a;
+  color: #fff;
+  text-shadow: 0 .05rem .1rem rgba(0, 0, 0, .5);
+  box-shadow: inset 0 0 5rem rgba(0, 0, 0, .5);
+}
+
+	.nav-link, a {
+		color: rgba(255,255,255,.5)!important;
+	}
+	a.nav-link:hover, a:hover {
+		color: #fff!important;
+		background-color: #343a40!important;
+		border-color: #343a40!important;
+	}
+  </style>
+  <body>
+<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+    <a class="navbar-brand" href="#">Flashcards</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+      <ul class="navbar-nav mr-auto">
+		  <li class="nav-item">
+			  <a class="nav-link" href="#"><i class="fa fa-list-ul" aria-hidden="true"></i> Your own boxes</a>
+			</li>
+			<li class="nav-item">
+			  <a class="nav-link" href="#"><i class="fa fa-globe" aria-hidden="true"></i> Community boxes</a>
+			</li>
+      </ul>
+	  <ul class="navbar-nav ml-auto">
+		  <!---<?php if(isset($box)): ?> --->
+		  <li class="nav-item">
+			<span class="nav-link text-muted">Box no 1</span>
+		</li>
+		  <li class="nav-item">
+			  <a class="nav-link" href="boxes/1"><i class="fa fa-eye" aria-hidden="true"></i> Overview</a>
+		  </li>
+		  <li class="nav-item">
+			  <a class="nav-link" href="boxes/1/view"><i class="fa fa-th-large" aria-hidden="true"></i> Flashcards</a>
+		  </li>
+		  <li class="nav-item">
+			  <a class="nav-link" href="boxes/1/study"><i class="fa fa-leanpub" aria-hidden="true"></i> Study</a>
+		  </li>
+		  <!---<?php endif; ?> --->
+		  <li class="nav-item dropdown">
+			  <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-user fa-fw"></i></a>
+			  <div class="dropdown-menu dropdown-menu-right bg-dark" aria-labelledby="dropdown01">
+				  <a class="dropdown-item nav-link" href="#"><i class="fa fa-user fa-fw"></i> User Profile</a>
+				  <div class="dropdown-divider"></div>
+				  <a href="#" class="dropdown-item nav-link">
+					  <i class="fa fa-sign-out fa-fw"></i> Logout
+					</a>
+			  </div>
+		  </li>
+	  </ul>
+    </div>
+  </nav>
+  <main class="container pt-5">
+  	<div class="pt-5">
+		<input id="idBox" type="hidden" value="<?=$box->id?>">
+  		<div class="col-lg-12">
+  			<h1 class="page-header"><$box->name></h1>
+  		</div>
+		<h4>Created by <$box->user->name?> 12.12.1234</h4>
+		<p>box->desc?></p>
+		<p>Last activity was <$box->updatetime->format("ago")> ago</p>
+  	</div>
+	<table class="table tedit-table" data-tediturl="boxes/<?=$box->id?>/cards">
+	  <caption style="caption-side: top;">
+			  <h4>
+				  Cards:
+				  <button class="btn btn-outline-secondary tedit-newbutton">
+					  <i class="fa fa-plus" aria-hidden="true"></i> Add a new card
+				  </button>
+			  </h4>
+      </caption>
+	  <tbody>
+		  <tr id="tedit-newline" class="tedit-item d-none" data-isedit="false" data-itemid="">
+			  <td><h4 class="tedit-field" data-teditkey="qSide"></h4></td>
+			  <td><h4 class="tedit-field" data-teditkey="aSide"></h4></td>
+			  <td colspan="2">new</td>
+			  <td>
+				  <div class="btn-group pull-right" role="group" aria-label="...">
+					  <button class="btn btn-outline-secondary btn-sm tedit-editbutton">
+						  <i class="fa fa-edit" aria-hidden="true"></i> Edit
+					  </button>
+					  <button class="btn btn-outline-secondary btn-sm tedit-savebutton d-none">
+						  <i class="fa fa-save" aria-hidden="true"></i> Save
+					  </button>
+					  <button class="btn btn-outline-secondary btn-sm tedit-deletebutton">
+						  <i class="fa fa-trash" aria-hidden="true"></i> Delete
+					  </button>
+					  <button class="btn btn-outline-secondary btn-sm tedit-cancelbutton d-none">
+						  <i class="fa fa-remove" aria-hidden="true"></i> Cancel
+					  </button>
+				  </div>
+			  </td>
+		  </tr>
+		  <tr class="tedit-item" data-isedit="false" data-itemid="1">
+			  <td><h4 class="tedit-field" data-teditkey="qSide"><$card->qSide?></h4></td>
+			  <td><h4 class="tedit-field" data-teditkey="aSide"><$card->aSide?></h4></td>
+			  <!---<?php if(($cardprogress = $card->progressOf($user->id)) !== null): ?> --->
+				  <td><h4>
+					  <span class="badge badge-danger"><span id="wrongCount"></span>2x wrong</span>
+					  <span class="badge badge-success"><span id="rightCount"></span>3x correct</span>
+				  </h4></td>
+				  <td><h4><i class="fa fa-star" aria-hidden="true"></i></h4></td>
+			  <!---<?php else: ?>
+				  <td colspan="2">new</td>
+			  <?php endif; ?>
+			  <?php if($box->idUser == $user->id): ?> --->
+				  <td>
+					  <div class="btn-group pull-right" role="group" aria-label="...">
+						  <button class="btn btn-outline-secondary btn-sm tedit-editbutton">
+							  <i class="fa fa-edit" aria-hidden="true"></i> Edit
+						  </button>
+						  <button class="btn btn-outline-secondary btn-sm tedit-savebutton d-none">
+							  <i class="fa fa-save" aria-hidden="true"></i> Save
+						  </button>
+						  <button class="btn btn-outline-secondary btn-sm tedit-deletebutton">
+							  <i class="fa fa-trash" aria-hidden="true"></i> Delete
+						  </button>
+						  <button class="btn btn-outline-secondary btn-sm tedit-cancelbutton d-none">
+							  <i class="fa fa-remove" aria-hidden="true"></i> Cancel
+						  </button>
+					  </div>
+				  </td>
+			  <!---<?php endif; ?>--->
+		  </tr>
+		  <tr class="tedit-item" data-isedit="false" data-itemid="1">
+			  <td><h4 class="tedit-field" data-teditkey="qSide"><$card->qSide?></h4></td>
+			  <td><h4 class="tedit-field" data-teditkey="aSide"><$card->aSide?></h4></td>
+			 <!--- <?php if($box->idUser == $user->id): ?> --->
+			 <td colspan="2">new</td>
+
+				  <td>
+					  <div class="btn-group pull-right" role="group" aria-label="...">
+						  <button class="btn btn-outline-secondary btn-sm tedit-editbutton">
+							  <i class="fa fa-edit" aria-hidden="true"></i> Edit
+						  </button>
+						  <button class="btn btn-outline-secondary btn-sm tedit-savebutton d-none">
+							  <i class="fa fa-save" aria-hidden="true"></i> Save
+						  </button>
+						  <button class="btn btn-outline-secondary btn-sm tedit-deletebutton">
+							  <i class="fa fa-trash" aria-hidden="true"></i> Delete
+						  </button>
+						  <button class="btn btn-outline-secondary btn-sm tedit-cancelbutton d-none">
+							  <i class="fa fa-remove" aria-hidden="true"></i> Cancel
+						  </button>
+					  </div>
+				  </td>
+			  <!---<?php endif; ?>--->
+		  </tr>
+	  </tbody>
+	</table>
+</main>
+</body>
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.2.0/js/bootstrap.min.js"></script>
+<script src="tableedit.js"></script>
+</html>

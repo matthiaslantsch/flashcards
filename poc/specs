@@ -1,0 +1,14 @@
+listing page =>
+	x one js file for pager
+	x pager korrekt (hidden input)
+	- pagedselect() method modelbase
+show page =>
+	x table edit
+	x in table new
+view page =>
+	x new js animation
+	x StudyBox object with options
+		x question first, answer firsty
+		x correct ask (split / ignore ())
+study page =>
+	- use new StudyBox object
