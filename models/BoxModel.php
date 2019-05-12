@@ -125,6 +125,11 @@ class BoxModel extends ModelBase {
 				];
 			}
 		}
+
+		foreach ($ret as $tier => &$values) {
+			shuffle($values);
+		}
+
 		ksort($ret);
 		if(count($ret) > 0) {
 			return call_user_func_array('array_merge', $ret);
