@@ -26,30 +26,6 @@ use holonet\flashcards\models\AssocModel;
 class CardsController extends FlashcardsControllerBase {
 
 	/**
-	 * GET /boxes/[idBox:i]/cards/new
-	 * Display an edit mask to create a new entry
-	 *
-	 * @access public
-	 * @param  integer $idBox The id of the box to add a new card to
-	 * @return the yield from the controller method
-	 */
-	public function new(int $idBox) {
-		if(($box = BoxModel::find($idBox)) === null) {
-			$this->notFound("Box with the id #{$idBox}");
-		}
-
-		//check if the logged in user is the actual owner
-		if($box->idUser != $this->user->id) {
-			$this->notAllowed("User with the id {$this->user->id} tried to change the box #{$id}");
-		}
-
-		yield "box" => $box;
-
-		//just return only the form template raw
-		$this->respondTo("html")->append("cards".DIRECTORY_SEPARATOR."form");
-	}
-
-	/**
 	 * POST /boxes/[idBox:i]/cards
 	 * method used to create a new card
 	 *
@@ -69,8 +45,8 @@ class CardsController extends FlashcardsControllerBase {
 
 		//create the new flashcard
 		$newCard = new CardModel([
-			"qSide" => strip_tags($this->request->request->get("question")),
-			"aSide" => strip_tags($this->request->request->get("answer")),
+			"qSide" => strip_tags($this->request->request->get("qSide")),
+			"aSide" => strip_tags($this->request->request->get("aSide")),
 			"idBox" => $box->id
 		]);
 
@@ -100,36 +76,6 @@ class CardsController extends FlashcardsControllerBase {
 	}
 
 	/**
-	 * GET /boxes/[idBox:i]/cards/[idCard:i]/edit
-	 * method used to show an edit mask to change a card entry
-	 *
-	 * @access public
-	 * @param  integer $idBox The id of the box to edit a card in
-	 * @param  integer $idCard The id of the card to edit
-	 * @return the yield from the controller method
-	 */
-	public function edit(int $idBox, int $idCard) {
-		if(($box = BoxModel::find($idBox)) === null) {
-			$this->notFound("Box with the id #{$idBox}");
-		}
-
-		//check if the logged in user is the actual owner
-		if($box->idUser != $this->user->id) {
-			$this->notAllowed("User with the id {$this->user->id} tried to change the box #{$id}");
-		}
-
-		if(($card = CardModel::find($idCard)) === null) {
-			$this->notFound("card with the id #{$idCard}");
-		}
-
-		yield "box" => $box;
-		yield "card" => $card;
-
-		//just return only the form template raw
-		$this->respondTo("html")->append("cards".DIRECTORY_SEPARATOR."form");
-	}
-
-	/**
 	 * PUT /boxes/[idBox:i]/cards/[idCard:i]
 	 * method used to submit a change to an existing card entry
 	 *
@@ -152,8 +98,8 @@ class CardsController extends FlashcardsControllerBase {
 			$this->notFound("card with the id #{$idCard}");
 		}
 
-		$card->qSide = strip_tags($this->request->request->get("question"));
-		$card->aSide = strip_tags($this->request->request->get("answer"));
+		$card->qSide = strip_tags($this->request->request->get("qSide"));
+		$card->aSide = strip_tags($this->request->request->get("aSide"));
 		if(!$card->save()) {
 			throw new RuntimeException("Failed updating flashcard with id #{$idCard} valid?: ".var_export($newCard->valid(), true), 400);
 		}
@@ -224,24 +170,32 @@ class CardsController extends FlashcardsControllerBase {
 		}
 
 		$assoc = $card->progressOf($this->user->id);
+
 		if($assoc === null) {
 			$assoc = AssocModel::create([
 				"idCard" => $card->id,
 				"idUser" => $this->user->id
-			]);
-
-			if($assoc === false) {
-				throw new RuntimeException("Failed creating an assoc entry for #{$box->id}", 400);
-			}
+			], true);
 		}
 
 		if($this->request->request->get("update") === "WRONG") {
 			$assoc->wrongC += 1;
-			$assoc->tier = 1;
+			$assoc->lasttier = $assoc->tier;
+			$assoc->tier = 0;
 		} elseif($this->request->request->get("update") === "RIGHT") {
 			$assoc->corrC += 1;
 			if($assoc->tier < 5) {
+				$assoc->lasttier = $assoc->tier;
 				$assoc->tier += 1;
+			}
+		} elseif($this->request->request->get("update") === "CORRECTION") {
+			$assoc->wrongC -= 1;
+			$assoc->tier = $assoc->lasttier;
+		} elseif($this->request->request->get("update") === "WRONGGUESS") {
+			$assoc->wrongC += 1;
+			if($assoc->tier > 0) {
+				$assoc->lasttier = $assoc->tier;
+				$assoc->tier -= 1;
 			}
 		}
 

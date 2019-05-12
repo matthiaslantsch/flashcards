@@ -89,27 +89,21 @@ FWRouter::with("boxes/[id:i]", function($builder) {
 		"controller" => "boxes",
 		"method" => "study"
 	));
+	//choice interface for multiple choice training
+	$builder->get(array(
+		"url" => "choice",
+		"controller" => "boxes",
+		"method" => "choice"
+	));
 });
 
 //the card is so to speak a "sub" REST resource below the box
 FWRouter::with("boxes/[idBox:i]/cards", function($builder) {
-	//return a form to create a new card
-	$builder->get(array(
-		"url" => "new",
-		"controller" => "cards",
-		"method" => "new"
-	));
 	//post to create a new card
 	$builder->post(array(
 		"url" => "",
 		"controller" => "cards",
 		"method" => "create"
-	));
-	//return a form to edit an existing card
-	$builder->get(array(
-		"url" => "[idCard:i]/edit",
-		"controller" => "cards",
-		"method" => "edit"
 	));
 	//put to save an edit to an existing card
 	$builder->put(array(

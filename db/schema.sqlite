@@ -10,9 +10,9 @@ CREATE TABLE "box" (
   "idBox" integer NOT NULL PRIMARY KEY,
   "name" varchar(255) NOT NULL,
   "desc" text NOT NULL,
+  "idUser" integer NOT NULL,
   "createtime" timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   "updatetime" timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  "idUser" integer NOT NULL,
   FOREIGN KEY ("idUser") REFERENCES "user"("idUser")
 )
 
@@ -26,14 +26,15 @@ CREATE TABLE "card" (
 )
 
 CREATE TABLE "assoc" (
-  -- assoc_1449494965
+  -- assoc_1557649020
   "idAssoc" integer NOT NULL PRIMARY KEY,
   "wrongC" integer NOT NULL DEFAULT 0,
   "corrC" integer NOT NULL DEFAULT 0,
   "tier" integer NOT NULL DEFAULT 5,
   "idCard" integer NOT NULL,
   "idUser" integer NOT NULL,
+  "lasttier" integer NOT NULL DEFAULT 0,
+  CONSTRAINT "unq_assoc_idCard" UNIQUE ("idCard"),
   FOREIGN KEY ("idCard") REFERENCES "card"("idCard"),
-  FOREIGN KEY ("idUser") REFERENCES "user"("idUser"),
-  CONSTRAINT "unq_assoc_idCard" UNIQUE ("idCard")
+  FOREIGN KEY ("idUser") REFERENCES "user"("idUser")
 )

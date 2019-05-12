@@ -19,7 +19,7 @@ use holonet\activerecord\Schema;
  * create the box table
  *
  * @author  matthias.lantsch
- * @package holonet\hblog\db\migrate
+ * @package holonet\flashcards\db\migrate
  */
 class BoxCreateMigration implements Migration {
 

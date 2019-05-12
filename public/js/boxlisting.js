@@ -1,6 +1,10 @@
 $(function(){
-	$("#listing").on("click", ".boxRow", function() {
-		window.location.assign(returnFWAlias()+"boxes/"+$(this).data("idbox"));
+	$("#listingTable").on("click", ".boxRow", function() {
+		window.location.assign(returnFWAlias()+"boxes/"+$(this).parent("tr").data("idbox"));
+	});
+
+	$("#listingTable").on("change", ".pageinput", function() {
+		setPager($(this).val());
 	});
 
 	$(document).on("submit", "#boxForm", function (e) {
@@ -42,33 +46,23 @@ $(function(){
 });
 
 function loadBoxes() {
-	$("#loading").show();
-	var ret = true;
+	$("#loading").removeClass("d-none");
+
 	$.ajax({
 		url: returnFWAlias()+"boxes/api?pager="+$("#pager").val()+$("#backendRequest").val(),
 		method: "GET",
 		async: false,
 		success: function(res) {
-			//mmmmm I love hacks
-			if(res.trim() != '<tr><td colspan="6"><span>Oops... There seems to be nothing here</span></td></tr>' || $("#pager").val() == 1) {
-				$("#listing").html(res);
-				if($("#pager").val() != 1) {
-					ret = false;
-				}
-			} else {
-				ret = false;
-			}
+			$("#listingTable").html(res);
 		},
 		error: function(res) {
 			var msg = "Sorry but there was an error: ";
 			alert(msg+xhr.status+" "+xhr.statusText, "danger");
-			ret = false;
 		},
 		complete: function(res) {
-			$("#loading").hide();
+			$("#loading").addClass("d-none");
 		}
 	});
-	return ret;
 }
 
 function resetProgress(idBox) {
@@ -103,7 +97,7 @@ function deleteBox(idBox) {
 			}
 		},
 		error: function() {
-			alert('Cannot connect to the server at this time :\'(', "danger");
+			alert('An error occurred :\'(', "danger");
 		}
 	});
 }
@@ -112,33 +106,32 @@ function editModal(idBox) {
 	if(typeof(idBox) == "undefined") {
 		idBox = "";
 		$("#editModal .modal-title").text("Create a new flashcard box");
-		$("#editModal .modal-body").load(returnFWAlias()+"boxes/new");
+		var load = returnFWAlias()+"boxes/new";
 	} else {
 		$("#editModal .modal-title").text("Edit flashcard box #"+idBox);
-		$("#editModal .modal-body").load(returnFWAlias()+"boxes/"+idBox+"/edit");
+		var load = returnFWAlias()+"boxes/"+idBox+"/edit";
 	}
-	$('#editModal').modal('show');
+
+	$("#editModal .modal-body").load(load, function(html, res) {
+		if(res === "error") {
+			alert('An error occurred :\'(', "danger");
+		} else {
+			$('#editModal').modal('show');
+		}
+	});
+
 }
 
-function pager(value) {
-	$("#prevBtn").removeAttr("disabled");
-	$("#nextBtn").removeAttr("disabled");
-
+function movePager(value) {
 	var oldPage = parseInt($("#pager").val());
-	var newPage = oldPage + value;
-	if(newPage < 1) {
-		newPage = 1;
-	}
-	$("#pager").val(newPage);
+	setPager(oldPage + value);
+}
 
-	if(!loadBoxes()) {
-		$("#pager").val(oldPage);
-		if(value < 2) {
-			$("#prevBtn").attr("disabled", true);
-		}
-
-		if(value > 0) {
-			$("#nextBtn").attr("disabled", true);
-		}
+function setPager(value) {
+	if(value < 1) {
+		value = 1;
 	}
+	$("#pager").val(value);
+
+	loadBoxes();
 }

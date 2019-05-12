@@ -45,7 +45,8 @@ class AssocModel extends ModelBase {
 	public static $validate = [
 		"wrongC" => ["presence" => true],
 		"corrC" => ["presence" => true],
-		"tier" => ["presence" => true]
+		"tier" => ["presence" => true],
+		"lasttier" => ["presence" => true]
 	];
 
 	/**
@@ -78,7 +79,11 @@ class AssocModel extends ModelBase {
 		}
 
 		if(!isset($data['tier'])) {
-			$data["tier"] = 1;
+			$data["tier"] = 0;
+		}
+
+		if(!isset($data['lasttier'])) {
+			$data["lasttier"] = 0;
 		}
 
 		parent::__construct($data, $fromDb);

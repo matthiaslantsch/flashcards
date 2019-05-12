@@ -3,7 +3,7 @@
  * This file is part of the holonet flashcards application
  * (c) Matthias Lantsch
  *
- * class file for a migration to create the assoc table
+ * class file for a migration to add a lasttier field to the assoc table
  *
  * @package holonet flashcards app
  * @license http://www.wtfpl.net/ Do what the fuck you want Public License
@@ -16,24 +16,19 @@ use holonet\activerecord\Migration;
 use holonet\activerecord\Schema;
 
 /**
- * create the assoc table
+ * add a lasttier field to the assoc table
  *
  * @author  matthias.lantsch
  * @package holonet\flashcards\db\migrate
  */
-class AssocCreateMigration implements Migration {
+class AssocAddLasttierMigration implements Migration {
 
 	/**
 	 * migration into the up direction
 	 */
 	public static function up() {
-		Schema::createTable('assoc', function($t) {
-			$t->integer("wrongC")->default(0);
-			$t->integer("corrC")->default(0);
-			$t->integer("tier")->default(5);
-			$t->addReference("card");
-			$t->addReference("user");
-			$t->addUnique("idCard", "idUser");
+		Schema::changeTable('assoc', function($t) {
+			$t->integer("lasttier")->default(0);
 		});
 	}
 
@@ -41,7 +36,9 @@ class AssocCreateMigration implements Migration {
 	 * migration into the down direction
 	 */
 	public static function down() {
-		Schema::dropTable("assoc");
+		Schema::changeTable('assoc', function($t) {
+			$t->dropColumn("lasttier");
+		});
 	}
 
 }

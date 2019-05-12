@@ -3,9 +3,9 @@ function alert(msg, level) {
 	$(".alert").fadeOut(2000);
 }
 
-function sendUpdate(idCard, update) {
+function sendUpdate(idBox, idCard, update) {
 	$.ajax({
-		url: returnFWAlias()+"boxes/"+$("#idBox").val()+"/cards/"+idCard+"/update",
+		url: returnFWAlias()+"boxes/"+idBox+"/cards/"+idCard+"/update",
 		method: "POST",
 		data: {"update": update},
 		error: function() {
@@ -34,4 +34,19 @@ function updatePager(numb) {
 	}
 
 	$(".progressLabel").text(progressBar.attr("aria-valuenow") + " / " + progressBar.attr("aria-valuemax"));
+}
+
+function shuffle(array) {
+	var currentIndex = array.length, temporaryValue, randomIndex;
+	// While there remain elements to shuffle...
+	while (0 !== currentIndex) {
+		// Pick a remaining element...
+		randomIndex = Math.floor(Math.random() * currentIndex);
+		currentIndex -= 1;
+		// And swap it with the current element.
+		temporaryValue = array[currentIndex];
+		array[currentIndex] = array[randomIndex];
+		array[randomIndex] = temporaryValue;
+	}
+	return array;
 }

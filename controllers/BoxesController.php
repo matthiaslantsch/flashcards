@@ -226,19 +226,36 @@ class BoxesController extends FlashcardsControllerBase {
 	 * @return the yield from the controller method
 	 */
 	public function boxApi() {
-		$options = array();
+		//sort by activity by default
+		$options = array(
+			"ORDER" => "updatetime"
+		);
 
 		//user id filter
 		if($this->request->query->has("idUser")) {
 			$options["idUser"] = intval($this->request->query->get("idUser"));
 		}
 
-		//apply pagination
-		$options["LIMIT"] = $this->request->query->get("limit", 10);
-		$options["OFFSET"] = ($this->request->query->get("pager", 1) - 1) * $options["LIMIT"];
+		//get the total number of results for this query
+		$totalcount = BoxModel::count($options);
+		$showlimit = $this->request->query->get("limit", 10);
+		$totalnumberofpages = ceil($totalcount / $showlimit);
 
-		yield "boxes" => BoxModel::select($options);
+		//apply pagination
+		$options["LIMIT"] = $showlimit;
+		$options["OFFSET"] = ($this->request->query->get("pager", 1) - 1) * $showlimit;
+
+		$pagedresult = BoxModel::select($options);
+
+		//for the displaying result 1 to 10 out of 115 text
+		yield "showingresult" => $options["OFFSET"] + 1;
+		yield "showingtoresult" => $options["OFFSET"] + count($pagedresult);
+
+		yield "boxes" => $pagedresult;
 		yield "user" => $this->user;
+		yield "pager" => $this->request->query->get("pager", 1);
+		yield "totalresults" => $totalcount;
+		yield "totalpages" => $totalnumberofpages;
 
 		$this->respondTo("html")->append("boxes".DIRECTORY_SEPARATOR."table");
 	}
@@ -281,6 +298,32 @@ class BoxesController extends FlashcardsControllerBase {
 		$box->lastActivity();
 
 		yield "title" => "Study {$box->name}";
+		yield "box" => $box;
+		yield "user" => $this->user;
+
+		//do not include cards from tier 5 in the result
+		$cardsArray = $box->getStudySetFor($this->user->id);
+		yield "cardcount" => count($cardsArray);
+		yield "cardsjson" => htmlspecialchars(json_encode($cardsArray));
+	}
+
+	/**
+	 * method for the choice action
+	 * will display a multiple choice training exercise
+	 * GET /boxes/[id:i]/choice
+	 *
+	 * @access public
+	 * @param  integer $id The id of the box to view
+	 * @return the yield from the controller method
+	 */
+	public function choice(int $id) {
+		if(($box = BoxModel::find($id)) === null) {
+			$this->notFound("Box with the id #{$id}");
+		}
+
+		$box->lastActivity();
+
+		yield "title" => "{$box->name} - Multiple choice";
 		yield "box" => $box;
 		yield "user" => $this->user;
 

@@ -6,4 +6,18 @@
 #
 #   $stones = models\StoneModel::create(array("name" => "a stone"));
 
+use holonet\flashcards\models\UserModel;
+use holonet\flashcards\models\BoxModel;
+
 require_once "demo".DIRECTORY_SEPARATOR."demo.php";
+
+$i = 1;
+
+while ($i < 100) {
+	$newBox = BoxModel::create([
+		"name" => "Box no $i",
+		"desc" => "Box no $i desc",
+		"idUser" => UserModel::first()->id
+	], true);
+	$i++;
+}

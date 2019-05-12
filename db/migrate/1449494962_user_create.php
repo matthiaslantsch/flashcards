@@ -19,7 +19,7 @@ use holonet\activerecord\Schema;
  * create the user table
  *
  * @author  matthias.lantsch
- * @package holonet\hblog\db\migrate
+ * @package holonet\flashcards\db\migrate
  */
 class UserCreateMigration implements Migration {
 

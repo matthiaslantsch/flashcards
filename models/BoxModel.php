@@ -94,25 +94,34 @@ class BoxModel extends ModelBase {
 		$avgTier = AssocModel::avg("tier", array("card.idBox" => $this->id, "idUser" => $idUser));
 		foreach ($this->cards as $card) {
 			$cardprogress = $card->progressOf($idUser);
+
+			$possibleAnswers = preg_replace("/ ?\([^)]+\) ?/", "", $card->aSide);
+			$possibleAnswers = explode(" / ", $possibleAnswers);
+			$possibleAnswers[] = $card->aSide;
+
 			if($cardprogress !== null) {
 				if($cardprogress->tier != 5 || $avgTier == 5) {
 					$ret[$cardprogress->tier][] = [
 						"idCard" => $card->id,
+						"idBox" => $this->id,
 						"question" => $card->qSide,
 						"answer" => $card->aSide,
 						"wrongCount" => $cardprogress->wrongC,
 						"rightCount" => $cardprogress->corrC,
-						"tier" => $cardprogress->tier
+						"tier" => $cardprogress->tier,
+						"check" => $possibleAnswers
 					];
 				}
 			} else {
 				$ret[0][] = [
 					"idCard" => $card->id,
+					"idBox" => $this->id,
 					"question" => $card->qSide,
 					"answer" => $card->aSide,
 					"wrongCount" => 0,
 					"rightCount" => 0,
-					"tier" => 0
+					"tier" => 0,
+					"check" => $possibleAnswers
 				];
 			}
 		}

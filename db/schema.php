@@ -51,7 +51,8 @@ Schema::createTable("assoc", function($table) {
 	$table->integer("tier")->default(5);
 	$table->integer("idCard")->unique();
 	$table->integer("idUser");
-	$table->version("1449494965");
+	$table->integer("lasttier")->default(0);
+	$table->version("1557649020");
 });
 
 ##
@@ -76,5 +77,5 @@ Schema::changeTable("card", function($table) {
 Schema::changeTable("assoc", function($table) {
 	$table->addReference("card", "idCard", "idCard");
 	$table->addReference("user", "idUser", "idUser");
-	$table->version("1449494965");
+	$table->version("1557649020");
 });

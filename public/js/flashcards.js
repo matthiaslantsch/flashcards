@@ -26,7 +26,7 @@ $(function(){
 
 function displayCard() {
 	var currentOffset = ($("#cardProgress").attr("aria-valuenow") - 1);
-	var currentItem = studybox[currentOffset];
+	var currentItem = $(".centeredcontainer").data("studybox")[currentOffset];
 
 	if($("#showFirst").val() === "question") {
 		$(".front h2").text(currentItem.question);

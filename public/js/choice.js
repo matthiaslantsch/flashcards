@@ -1,10 +1,9 @@
 $(function(){
 	$("#showFirst").on("change", displayCard);
 
-	console.log($('#questionArea div'));
 	$('#questionArea div').on('click', '.answerbtn', function(){
 		var currentOffset = ($("#cardProgress").attr("aria-valuenow") - 1);
-		var currentItem = studybox[currentOffset];
+		var currentItem = $(".centeredcontainer").data("studybox")[currentOffset];
 
 		$(".answerbtn").prop("disabled", true);
 		if($(this).data("idcard") == currentItem.idCard) {
@@ -12,7 +11,8 @@ $(function(){
 		} else {
 			$(this).removeClass("btn-dark").addClass("btn-danger");
 			$('*[data-idcard="'+currentItem.idCard+'"]').removeClass("btn-dark").addClass("btn-outline-success");
-			//sendupdate false -1
+			sendUpdate(currentItem.idBox, currentItem.idCard, "WRONGGUESS");
+			sendUpdate(currentItem.idBox, $(this).data("idcard"), "WRONGGUESS");
 		}
 		setTimeout(function(){
 			updatePager(1);
@@ -26,15 +26,16 @@ $(function(){
 
 function displayCard() {
 	var currentOffset = ($("#cardProgress").attr("aria-valuenow") - 1);
+	var studybox = $(".centeredcontainer").data("studybox");
 	var currentItem = studybox[currentOffset];
 
 	if(currentOffset == studybox.length) {
 		$(".card-footer").hide();
 		$(".card-header").hide();
-		$("#questionArea").html(
+		$("#studyField").html(
 			'<div class="btn-group btn-group-lg" role="group" aria-label="...">'+
 			'<button type="button" onclick="location.reload()" class="btn btn-dark">Again</button>'+
-			'<button type="button" onclick="window.location.replace(\''+"returnFWAlias"+"boxes/"+$("#idBox").val()+'\')" class="btn btn-dark">Back</button>'+
+			'<button type="button" onclick="window.history.back()" class="btn btn-dark">Back</button>'+
 			'</div>'
 		);
 		return;
